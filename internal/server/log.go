@@ -19,6 +19,10 @@ type Log struct {
 	mu      sync.Mutex
 }
 
+func NewLog() *Log {
+	return &Log{}
+}
+
 func (l *Log) Append(record Record) (uint64, error) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
