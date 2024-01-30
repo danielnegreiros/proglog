@@ -7,10 +7,12 @@ import (
 	"sync"
 )
 
+// the most significant byte to the right
 var (
 	enc = binary.BigEndian
 )
 
+// 8 hexadecimal byte allowing to store number up to trillion of trillions
 const (
 	lenWidth = 8
 )
@@ -47,6 +49,8 @@ func (s *store) Append(p []byte) (n uint64, pos uint64, err error) {
 
 	// Write the length of the data slice 'p' as an 8-byte unsigned integer in big-endian format
 	// to the buffer.
+	// [0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x16] <- = length of data following pattern
+	//  0    1   2   3   4   5   6    7
 	if err := binary.Write(s.buf, enc, uint64(len(p))); err != nil {
 		return 0, 0, err // Return 0 values and the encountered error if writing the length fails.
 	}
@@ -86,6 +90,7 @@ func (s *store) Read(pos uint64) ([]byte, error) {
 	// Convert the read length bytes to an unsigned integer using big-endian encoding.
 	dataLength := enc.Uint64(size)
 
+	// Create a slice of bytes from the size of datalength
 	// Read the actual data from the file at the specified position plus the length field width.
 	data := make([]byte, dataLength)
 	if _, err := s.File.ReadAt(data, int64(pos+lenWidth)); err != nil {

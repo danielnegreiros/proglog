@@ -22,7 +22,7 @@ func TestAppend(t *testing.T){
 	store, err := newStore(f)
 	require.NoError(t, err)
 
-	n, pos, err := store.Append([]byte("Testando 123 123 asdad"))
+	n, pos, err := store.Append([]byte("Testando 123 123 asdad\n asdhjdsadsadsdsadsakjdlhadaskdsjlakdjlaja aksddsadsdsadsadadsahjdsahjdsahjhjdsahjdhsadasa"))
 	require.NoError(t, err)
 
 	n, pos, err = store.Append([]byte("Testando 123 123 asdad"))
@@ -33,7 +33,7 @@ func TestAppend(t *testing.T){
 
 	store.buf.Flush()
 
-	byteContent, err := store.Read(30)
+	byteContent, err := store.Read(151)
 	require.NoError(t, err)
 
 	log.Println(string(byteContent))
